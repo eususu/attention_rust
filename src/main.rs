@@ -7,7 +7,9 @@ use axum::{
 async fn main() {
 
     let app = Router::new()
-        .route("/", get(|| async { "Hello world "}));
+        .route("/", get(|| async { "Hello world "}))
+        .route("/test", get(|| async { "Hello world test "}))
+        ;
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8008").await.unwrap();
     axum::serve(listener, app.into_make_service()).await.unwrap();
