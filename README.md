@@ -16,6 +16,6 @@ This project made for testing.
 
 | end point | meaning |
 | - | - |
-| /service | manage service infomations |
-| /qa{service_name} | manage question-answering informations about {service_name} |
+| /api/service | manage service infomations |
+| /api/qa{service_name} | manage question-answering informations about {service_name} |
 
