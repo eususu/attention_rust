@@ -1,8 +1,7 @@
-use std::u32;
+use std::{sync::Arc, u32};
 
 use axum::{
-    routing::get, Router,
-    Json
+    extract::{Path, State}, routing::get, Json, Router
 };
 use serde::Serialize;
 
@@ -36,7 +35,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(|| async { "Hello world "}))
         .route("/api/service", get(service_list))
-        .route("/api/qa", get(get_qalist))
+        .route("/api/qa/:service_name", get(get_qalist))
         ;
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8008").await.unwrap();
@@ -54,7 +53,9 @@ async fn service_list() -> Json<ServiceList> {
     Json(services)
 }
 
-async fn get_qalist() -> Json<QAListResponse> {
+async fn get_qalist(Path(service_name): Path<String>) -> Json<QAListResponse> {
+    println!("get_qalist={}", service_name);
+
     let qalist = vec![
         QAInfo{
         id: String::from("id"),
