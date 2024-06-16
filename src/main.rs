@@ -1,9 +1,15 @@
 use std::{sync::Arc, u32};
 
 use axum::{
-    extract::{Path, State}, routing::get, Json, Router
+    extract::{Path, Query, State}, routing::get, Json, Router
 };
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+
+#[derive(Deserialize)]
+struct QAListRequest {
+    mode: String,
+    t: String,
+}
 
 #[derive(Serialize)]
 struct ServiceList {
@@ -38,7 +44,11 @@ async fn main() {
         .route("/api/qa/:service_name", get(get_qalist))
         ;
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8008").await.unwrap();
+    let sock = "0.0.0.0:8008";
+
+    println!("BIND={}", sock);
+
+    let listener = tokio::net::TcpListener::bind(sock).await.unwrap();
     axum::serve(listener, app.into_make_service()).await.unwrap();
 }
 
@@ -53,8 +63,17 @@ async fn service_list() -> Json<ServiceList> {
     Json(services)
 }
 
-async fn get_qalist(Path(service_name): Path<String>) -> Json<QAListResponse> {
+async fn get_qalist(Path(service_name): Path<String>, _mode:Option<Query<QAListRequest>>) -> Json<QAListResponse> {
     println!("get_qalist={}", service_name);
+
+    if _mode.is_none() {
+        println!("get_qalist= mode is none");
+    } else {
+        let mode = _mode.unwrap();
+        println!("get_qalist= mode is {}", mode.mode);
+        println!("get_qalist= mode is {}", mode.t);
+    }
+
 
     let qalist = vec![
         QAInfo{
