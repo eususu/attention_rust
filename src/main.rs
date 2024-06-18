@@ -35,8 +35,12 @@ struct QAListResponse {
     qa_list: Vec<QAInfo>
 }
 
+mod dao;
+
 #[tokio::main]
 async fn main() {
+
+    dao::get_service_list().await;
 
     let app = Router::new()
         .route("/", get(|| async { "Hello world "}))
