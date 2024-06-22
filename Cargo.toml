@@ -5,5 +5,8 @@ edition = "2021"
 
 [dependencies]
 axum = "0.7.5"
+bb8 = "0.8.5"
+diesel = { version = "2.1.6", features = ["postgres"] }
+diesel-async = { version = "0.4.1", features = ["bb8", "postgres"] }
 serde = { version="1.0.203", features = ["derive"]}
 tokio = { version="1.38.0", features = ["full"]}
