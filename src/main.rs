@@ -40,8 +40,6 @@ mod dao;
 #[tokio::main]
 async fn main() {
 
-    dao::get_service_list().await;
-
     let app = Router::new()
         .route("/", get(|| async { "Hello world "}))
         .route("/api/service", get(service_list))
@@ -58,13 +56,8 @@ async fn main() {
 
 
 
-async fn service_list() -> Json<ServiceList> {
-    let services = ServiceList{
-        name: String::from("kaai_poc"),
-        table_name: String::from("attention_kaai_poc"),
-    };
-
-    Json(services)
+async fn service_list() -> Json<Vec<ServiceList>> {
+    dao::get_service_list().await
 }
 
 async fn get_qalist(Path(service_name): Path<String>, _mode:Option<Query<QAListRequest>>) -> Json<QAListResponse> {
